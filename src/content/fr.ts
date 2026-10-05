@@ -110,6 +110,7 @@ const fr = {
     text: "De la santé au e-commerce, des plateformes conçues, développées et mises en production pour de vrais utilisateurs.",
     cta: "Démarrer un projet",
     privateLabel: "Privé · démo sur demande",
+    note: "Liste non exhaustive : certains projets restent confidentiels.",
     visit: "Voir le site",
     next: "Projet suivant",
     items: [

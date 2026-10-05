@@ -105,6 +105,10 @@ export default function Projects({ projects }: { projects: Content["projects"] }
               </>,
             )}
           </h2>
+          {/* Mention : liste non exhaustive */}
+          <p className="mt-5 flex items-center gap-2 text-sm font-medium text-ink/60">
+            <Lock className="size-4 shrink-0" /> {projects.note}
+          </p>
         </div>
         <div data-reveal style={{ ["--delay" as string]: "100ms" }}>
           <p className="max-w-md text-ink/65">{projects.text}</p>

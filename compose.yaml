@@ -6,6 +6,21 @@ services:
     container_name: diomoh
     restart: unless-stopped
     env_file: .env  # SMTP Brevo (voir .env.example)
+    environment:
+      NODE_OPTIONS: --max-old-space-size=384
+    # Plafonds : une surcharge du portfolio ne doit pas affecter les autres services du VPS.
+    mem_limit: 512m
+    memswap_limit: 512m
+    cpus: 1.0
+    pids_limit: 200
+    security_opt:
+      - no-new-privileges:true
+    cap_drop: [ALL]
+    logging:
+      driver: json-file
+      options:
+        max-size: 10m
+        max-file: "3"
     networks: [web]
 
 networks:

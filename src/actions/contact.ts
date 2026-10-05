@@ -2,10 +2,11 @@
 
 import "server-only";
 import { headers } from "next/headers";
-import nodemailer from "nodemailer";
+import nodemailer, { type Transporter } from "nodemailer";
 import { getContent } from "@/content";
 import { hasLocale } from "@/i18n/config";
 import { confirmationEmail, notificationEmail } from "@/lib/emails";
+import { clientIp, createLimiter, createSemaphore } from "@/lib/rate-limit";
 
 export type ContactState = { status: "idle" | "success" | "error" | "invalid" };
 
@@ -15,18 +16,37 @@ const env = (key: string) => {
   return value;
 };
 
-// Anti-spam simple : 5 envois max par IP et par heure (mémoire du serveur).
-const hits = new Map<string, number[]>();
-const tooMany = (ip: string) => {
-  const now = Date.now();
-  const recent = (hits.get(ip) ?? []).filter((t) => now - t < 3_600_000);
-  recent.push(now);
-  hits.set(ip, recent);
-  return recent.length > 5;
-};
+// Garde-fous anti-abus (mémoire bornée) :
+// - 5 tentatives par IP et par heure (invalides et refusées comprises) ;
+// - 2 confirmations par adresse visiteur et par jour ;
+// - 40 envois par heure au total, quelle que soit l'IP (budget SMTP) ;
+// - 2 envois SMTP simultanés au maximum.
+const perIp = createLimiter({ limit: 5, windowMs: 3_600_000 });
+const perRecipient = createLimiter({ limit: 2, windowMs: 86_400_000 });
+const everyone = createLimiter({ limit: 40, windowMs: 3_600_000, maxKeys: 1 });
+const smtpSlot = createSemaphore(2);
+
+// Transport SMTP partagé : connexions réutilisées, TLS obligatoire, délais courts.
+let transport: Transporter | null = null;
+const getTransport = () =>
+  (transport ??= nodemailer.createTransport({
+    host: env("SMTP_HOST"),
+    port: Number(process.env.SMTP_PORT ?? 587),
+    secure: Number(process.env.SMTP_PORT) === 465,
+    requireTLS: true,
+    auth: { user: env("SMTP_USER"), pass: env("SMTP_PASS") },
+    pool: true,
+    maxConnections: 2,
+    connectionTimeout: 10_000,
+    greetingTimeout: 10_000,
+    socketTimeout: 20_000,
+  }));
 
 // Envoie le message du formulaire de contact via le SMTP de Brevo.
 export async function sendContact(_: ContactState, data: FormData): Promise<ContactState> {
+  // Quota par IP vérifié en premier, avant tout travail.
+  if (perIp(clientIp(await headers()))) return { status: "error" };
+
   // Champ piège invisible : rempli uniquement par les robots.
   if (data.get("website")) return { status: "success" };
 
@@ -39,17 +59,10 @@ export async function sendContact(_: ContactState, data: FormData): Promise<Cont
   const locale = hasLocale(lang) ? lang : "fr";
   const { confirmation } = getContent(locale).contact;
 
-  const h = await headers();
-  const ip = h.get("x-forwarded-for")?.split(",")[0].trim() ?? h.get("x-real-ip") ?? "local";
-  if (tooMany(ip)) return { status: "error" };
+  if (everyone("all")) return { status: "error" };
 
-  try {
-    const transport = nodemailer.createTransport({
-      host: env("SMTP_HOST"),
-      port: Number(process.env.SMTP_PORT ?? 587),
-      secure: Number(process.env.SMTP_PORT) === 465,
-      auth: { user: env("SMTP_USER"), pass: env("SMTP_PASS") },
-    });
+  const sent = await smtpSlot(async () => {
+    const transport = getTransport();
     const from = env("CONTACT_FROM");
     await transport.sendMail({
       from: { name: "Portfolio diomoh", address: from },
@@ -58,8 +71,9 @@ export async function sendContact(_: ContactState, data: FormData): Promise<Cont
       ...notificationEmail({ name, email, project, lang: locale }),
     });
 
-    // Confirmation au visiteur : texte fixe (sans recopier son message, pour ne pas servir de relais à spam).
-    // Un échec ici n'annule pas l'envoi principal.
+    // Confirmation au visiteur : texte fixe (sans recopier son message, pour ne pas servir de relais à spam),
+    // 2 par adresse et par jour. Un échec ici n'annule pas l'envoi principal.
+    if (perRecipient(email.toLowerCase())) return true;
     try {
       await transport.sendMail({
         from: { name: "Mohamed Diomande", address: from },
@@ -70,9 +84,12 @@ export async function sendContact(_: ContactState, data: FormData): Promise<Cont
     } catch (err) {
       console.error("[contact] confirmation au visiteur impossible :", err);
     }
-    return { status: "success" };
-  } catch (err) {
+    return true;
+  }).catch((err) => {
     console.error("[contact] envoi impossible :", err);
-    return { status: "error" };
-  }
+    return false;
+  });
+
+  if (sent === null) console.warn("[contact] trop d'envois simultanés, message refusé");
+  return { status: sent ? "success" : "error" };
 }

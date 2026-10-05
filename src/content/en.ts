@@ -95,6 +95,7 @@ const en: Content = {
     text: "From healthcare to e-commerce, platforms designed, built and shipped to production for real users.",
     cta: "Start a project",
     privateLabel: "Private · demo on request",
+    note: "Not an exhaustive list: some projects remain confidential.",
     visit: "Visit site",
     next: "Next project",
     items: [
