@@ -1,0 +1,285 @@
+@import "tailwindcss";
+
+:root {
+  --paper: #ffffff;
+  --paper-2: #f5f5f2;
+  --ink: #0d0d0e;
+  --ink-2: #161618;
+  --muted: #8a8a8f;
+  --line: rgba(255, 255, 255, 0.12);
+  --primary: #2563eb;
+  --pink: #f0b2f4;
+  --teal: #a8dcd4;
+  --yellow: #fcc86d;
+  --slate: #59595c;
+}
+
+@theme inline {
+  --color-paper: var(--paper);
+  --color-paper-2: var(--paper-2);
+  --color-ink: var(--ink);
+  --color-ink-2: var(--ink-2);
+  --color-muted: var(--muted);
+  --color-primary: var(--primary);
+  --color-pink: var(--pink);
+  --color-teal: var(--teal);
+  --color-yellow: var(--yellow);
+  --color-slate: var(--slate);
+  --font-sans: var(--font-body);
+  --font-mono: var(--font-dm-mono);
+  --font-display: var(--font-display);
+}
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 88px;
+}
+
+body {
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-body), system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: clip;
+}
+
+::selection {
+  background: var(--primary);
+  color: #fff;
+}
+
+.font-display {
+  font-family: var(--font-display), var(--font-body), system-ui, sans-serif;
+  letter-spacing: -0.02em;
+}
+
+/* Défilement infini (ligne active du hero, bandeau de confiance) */
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+.animate-marquee {
+  animation: marquee 9s linear infinite;
+}
+.animate-marquee-slow {
+  animation: marquee 40s linear infinite;
+}
+
+@keyframes spin-slow {
+  to { transform: rotate(360deg); }
+}
+.animate-spin-slow {
+  animation: spin-slow 18s linear infinite;
+}
+
+/* Apparition du nom : chaque ligne monte depuis un masque */
+@keyframes rise {
+  from { transform: translateY(105%); }
+  to { transform: translateY(0); }
+}
+.rise {
+  display: inline-block;
+  animation: rise 1.1s cubic-bezier(0.19, 1, 0.22, 1) both;
+}
+
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(18px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.fade-up {
+  animation: fade-up 0.9s cubic-bezier(0.19, 1, 0.22, 1) both;
+}
+
+@keyframes photo-in {
+  from { opacity: 0; transform: scale(1.08); filter: grayscale(1) contrast(1.15) brightness(0.6); }
+  to { opacity: 1; transform: scale(1); }
+}
+.photo-in {
+  animation: photo-in 1.6s cubic-bezier(0.19, 1, 0.22, 1) both;
+}
+
+@keyframes pulse-dot {
+  0% { box-shadow: 0 0 0 0 rgba(74, 222, 128, 0.7); }
+  100% { box-shadow: 0 0 0 10px rgba(74, 222, 128, 0); }
+}
+.pulse-dot {
+  animation: pulse-dot 1.8s ease-out infinite;
+}
+
+/* Révélation au défilement */
+[data-reveal] {
+  opacity: 0;
+  transform: translateY(48px) scale(0.98);
+  filter: blur(6px);
+  transition: opacity 1s cubic-bezier(0.19, 1, 0.22, 1), transform 1s cubic-bezier(0.19, 1, 0.22, 1), filter 1s cubic-bezier(0.19, 1, 0.22, 1);
+  transition-delay: var(--delay, 0ms);
+}
+[data-reveal].is-visible {
+  opacity: 1;
+  transform: none;
+  filter: none;
+}
+
+/* Variantes en cascade : le conteneur reste visible, ses enfants entrent un par un (--i). */
+[data-reveal="rise"],
+[data-reveal="pop"],
+[data-reveal="slide"],
+[data-reveal="clip"] {
+  opacity: 1;
+  transform: none;
+  filter: none;
+}
+[data-reveal="rise"]:not(.is-visible) > *,
+[data-reveal="pop"]:not(.is-visible) > *,
+[data-reveal="slide"]:not(.is-visible) > *,
+[data-reveal="clip"]:not(.is-visible) > * {
+  opacity: 0;
+}
+:is([data-reveal="rise"], [data-reveal="pop"], [data-reveal="slide"], [data-reveal="clip"]).is-visible > * {
+  animation-duration: 1.1s;
+  animation-timing-function: cubic-bezier(0.19, 1, 0.22, 1);
+  animation-fill-mode: backwards;
+  animation-delay: calc(var(--i, 0) * 90ms);
+}
+[data-reveal="rise"].is-visible > * { animation-name: in-rise; }
+[data-reveal="pop"].is-visible > * {
+  animation-name: in-pop;
+  animation-duration: 0.8s;
+  animation-timing-function: cubic-bezier(0.34, 1.56, 0.64, 1);
+  animation-delay: calc(var(--i, 0) * 45ms);
+}
+[data-reveal="slide"].is-visible > * { animation-name: in-slide; }
+[data-reveal="clip"].is-visible > * { animation-name: in-clip; animation-duration: 1.3s; animation-delay: calc(var(--i, 0) * 140ms); }
+
+@keyframes in-rise {
+  from { opacity: 0; transform: translateY(120px) rotate(2deg); }
+}
+@keyframes in-pop {
+  from { opacity: 0; transform: scale(0.3) rotate(-14deg); }
+}
+@keyframes in-slide {
+  from { opacity: 0; transform: translateX(60px); }
+}
+@keyframes in-clip {
+  from { opacity: 0.4; clip-path: inset(45% 45% 45% 45% round 40px); transform: scale(1.15); }
+}
+
+/* Titres : mots qui se posent un par un, puis le trait ondulé se dessine. */
+.w { display: inline-block; }
+[data-split]:not(.is-visible) .w { opacity: 0; }
+[data-split].is-visible .w {
+  animation: in-word 1s cubic-bezier(0.19, 1, 0.22, 1) backwards;
+  animation-delay: calc(var(--i) * 60ms + 120ms);
+}
+@keyframes in-word {
+  from { opacity: 0; transform: translateY(0.45em) rotate(5deg); filter: blur(8px); }
+}
+.ul-path {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  transition: stroke-dashoffset 1.1s cubic-bezier(0.65, 0, 0.35, 1) 0.7s;
+}
+.is-visible .ul-path { stroke-dashoffset: 0; }
+
+
+/* Marge commune des sections : même bord que le conteneur max-w-7xl (80rem) + px-5 / sm:px-8. */
+.shell { padding-inline: max(20px, calc((100% - 80rem) / 2 + 20px)); }
+.shell-l { padding-left: max(20px, calc((100% - 80rem) / 2 + 20px)); }
+@media (min-width: 640px) {
+  .shell { padding-inline: max(32px, calc((100% - 80rem) / 2 + 32px)); }
+  .shell-l { padding-left: max(32px, calc((100% - 80rem) / 2 + 32px)); }
+}
+
+/* Coin inversé (onglet découpé dans un panneau) */
+.inv-corner {
+  width: 28px;
+  height: 28px;
+  background: radial-gradient(circle at 100% 100%, transparent 27.5px, var(--paper) 28px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  [data-reveal], [data-reveal] > *, .w { opacity: 1 !important; transform: none; }
+  .ul-path { stroke-dashoffset: 0; }
+}
+
+/* Sphère 3D rayée (tuile « 7 en production ») */
+.sphere {
+  position: relative;
+  border-radius: 9999px;
+  background: var(--primary);
+  overflow: hidden;
+}
+.sphere::after {
+  content: "";
+  position: absolute;
+  inset: -20%;
+  background: repeating-linear-gradient(115deg, transparent 0 8px, rgba(255, 255, 255, 0.28) 8px 11px);
+  animation: spin-slow 22s linear infinite;
+  border-radius: 9999px;
+}
+
+
+/* Hero : halo couleur qui suit le curseur sur la photo noir et blanc */
+@property --r {
+  syntax: "<length>";
+  inherits: true;
+  initial-value: 0px;
+}
+.hero-photo {
+  --x: 50%;
+  --y: 30%;
+  --r: 0px;
+  transition: --r 0.6s cubic-bezier(0.19, 1, 0.22, 1);
+}
+.hero-photo.is-revealing {
+  --r: 170px;
+}
+.hero-photo-color {
+  pointer-events: none;
+  -webkit-mask-image: radial-gradient(circle var(--r) at var(--x) var(--y), #000 55%, transparent 100%);
+  mask-image: radial-gradient(circle var(--r) at var(--x) var(--y), #000 55%, transparent 100%);
+}
+
+/* Mini-animations des principes (section 2) */
+@keyframes stack-in {
+  0%, 8% { transform: translateY(-28px); opacity: 0; }
+  22%, 82% { transform: none; opacity: 1; }
+  100% { transform: none; opacity: 0; }
+}
+.stack-block { animation: stack-in 3.6s cubic-bezier(0.19, 1, 0.22, 1) infinite both; }
+
+@keyframes cursor-path {
+  0% { transform: translate(14px, 10px); }
+  30% { transform: translate(70px, 34px); }
+  55% { transform: translate(112px, 22px); }
+  80% { transform: translate(116px, 52px); }
+  100% { transform: translate(14px, 10px); }
+}
+.cursor-path { animation: cursor-path 4.5s ease-in-out infinite; }
+
+@keyframes ai-type {
+  0% { transform: scaleX(0); }
+  35%, 85% { transform: scaleX(1); }
+  100% { transform: scaleX(1); opacity: 0; }
+}
+.ai-line { transform-origin: left; animation: ai-type 3.6s cubic-bezier(0.19, 1, 0.22, 1) infinite both; }
+@keyframes ai-spark { 0%, 100% { transform: scale(1) rotate(0); } 50% { transform: scale(1.25) rotate(20deg); } }
+.ai-spark { animation: ai-spark 2.4s ease-in-out infinite; }
+
+@keyframes steps-fill { 0% { transform: translateY(-50%) scaleX(0); } 75%, 100% { transform: translateY(-50%) scaleX(1); } }
+.steps-fill { animation: steps-fill 3s ease-in-out infinite; }
+@keyframes steps-dot { 0%, 10% { background: transparent; } 20%, 100% { background: currentColor; } }
+.steps-dot { animation: steps-dot 3s ease-in-out infinite both; }
+
+
+/* Motifs flottants (section Services) */
+@keyframes shape-float {
+  0%, 100% { translate: 0 0; rotate: 0deg; }
+  50% { translate: 0 -14px; rotate: 6deg; }
+}
+.shape-float { animation: shape-float 6s ease-in-out infinite; }

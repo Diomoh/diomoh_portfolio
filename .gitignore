@@ -39,3 +39,9 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# originaux non utilisés par le site (gardés en local)
+/public/videos/
+/public/images/*.png
+/public/images/mon_image/*.png
+/public/images/mon_image/*.jpeg
