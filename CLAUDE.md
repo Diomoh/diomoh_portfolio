@@ -24,6 +24,9 @@ Site vitrine de Mohamed Diomande (Développeur Fullstack & Chef de projet). Next
 - `src/content/fr.ts` / `en.ts` : **tout le texte du site**. `fr.ts` définit le type `Content`, `en.ts` doit le respecter.
 - `src/components/` : un composant par bloc (`Hero`, `Intro`, `About`, `Skills`, `Projects`, `Services`, `Education`, `Contact`, `Footer`) + utilitaires (`SectionHeader`, `MockScreen`, `RevealObserver`, `LangSwitch`, `icons`).
 - `public/images/` : `mohamed.jpg` (photo, image Open Graph) et `mohamed-cutout.webp` (photo détourée).
+- `src/actions/contact.ts` : Server Action du formulaire (SMTP Brevo, limites anti-abus) ; `src/lib/emails.ts` (modèles d'e-mails), `src/lib/rate-limit.ts` (compteurs bornés, IP visiteur).
+- `public/email/` : bandeau et avatar des e-mails. Variables d'environnement : voir `.env.example`.
+- `docs/MISES_A_JOUR.md` : journal des évolutions et de la configuration ; `AUDIT_SECURITE.md` : audit et suivi des corrections.
 - Source du contenu : `../contenu/portfolio-contenu.md` (FR) et `portfolio-content-en.md` (EN).
 
 ## Règles de contenu

@@ -39,13 +39,16 @@ function resolveLocale(request: NextRequest): Locale {
   return localeFromCountry(request) ?? localeFromBrowser(request) ?? defaultLocale;
 }
 
+// Le site n'a qu'une page par langue : toute autre adresse renvoie vers l'accueil
+// (/fr/xyz → /fr, /xyz → /fr ou /en selon le visiteur). Redirection temporaire (307)
+// pour pouvoir ajouter de vraies pages plus tard.
 export function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
-  const hasPrefix = locales.some((l) => pathname === `/${l}` || pathname.startsWith(`/${l}/`));
-  if (hasPrefix) return;
+  const prefix = locales.find((l) => pathname === `/${l}` || pathname.startsWith(`/${l}/`));
+  if (prefix && (pathname === `/${prefix}` || pathname === `/${prefix}/`)) return;
 
   const url = request.nextUrl.clone();
-  url.pathname = `/${resolveLocale(request)}${pathname === "/" ? "" : pathname}`;
+  url.pathname = `/${prefix ?? resolveLocale(request)}`;
   const response = NextResponse.redirect(url);
   response.headers.set("Vary", "Cookie, Accept-Language");
   return response;

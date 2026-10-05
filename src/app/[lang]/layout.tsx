@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { notFound } from "next/navigation";
+import { redirect } from "next/navigation";
 import { DM_Mono, DM_Sans, Plus_Jakarta_Sans } from "next/font/google";
 import { getContent } from "@/content";
 import { hasLocale, locales } from "@/i18n/config";
@@ -41,7 +41,8 @@ export async function generateMetadata({ params }: LayoutProps<"/[lang]">): Prom
 
 export default async function RootLayout({ children, params }: LayoutProps<"/[lang]">) {
   const { lang } = await params;
-  if (!hasLocale(lang)) notFound();
+  // Adresse non prise en charge par le proxy (ex. /page.php) : retour à l'accueil.
+  if (!hasLocale(lang)) redirect("/");
   return (
     <html lang={lang} className={`${body.variable} ${display.variable} ${mono.variable}`}>
       {/* Certaines extensions (ColorZilla, Grammarly…) ajoutent des attributs au body avant React. */}
