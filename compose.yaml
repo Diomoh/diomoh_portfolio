@@ -1,0 +1,13 @@
+# Portfolio diomoh.com, servi par le Caddy de Tuyo (même VPS).
+# Le conteneur rejoint le réseau « web » de Tuyo ; aucun port n'est ouvert sur l'hôte.
+services:
+  diomoh:
+    build: .
+    container_name: diomoh
+    restart: unless-stopped
+    networks: [web]
+
+networks:
+  web:
+    external: true
+    name: ${TUYO_WEB_NETWORK:-app_web}
