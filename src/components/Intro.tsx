@@ -20,16 +20,16 @@ export default function Intro({ intro }: { intro: Content["intro"] }) {
             </h2>
             <span aria-hidden className="absolute top-1 right-0 size-6 border-t-[6px] border-r-[6px] border-ink sm:size-9" />
           </div>
-          <p data-reveal className="pb-2 text-sm font-medium text-ink/60">
+          {/* <p data-reveal className="pb-2 text-sm font-medium text-ink/60">
             {intro.label} <span className="text-primary">({String(intro.principles.length).padStart(2, "0")})</span>
-          </p>
+          </p> */}
         </div>
 
         {/* 4 principes : colonnes, la carte survolée passe en noir */}
         <PrinciplesGrid principles={intro.principles} />
 
         {/* Preuves */}
-        <div className="mt-4 grid gap-4 sm:grid-cols-[1fr_1.75fr]">
+        {/* <div className="mt-4 grid gap-4 sm:grid-cols-[1fr_1.75fr]">
           <div data-reveal className="relative flex min-h-[120px] items-center gap-4 rounded-[28px] bg-slate p-6 text-white">
             <Corner className="top-5 right-5" />
             <Award className="size-9 shrink-0" />
@@ -48,7 +48,7 @@ export default function Intro({ intro }: { intro: Content["intro"] }) {
               <div className="text-sm leading-snug font-medium">{stats.live.label}</div>
             </div>
           </div>
-        </div>
+        </div> */}
       </div>
     </section>
   );

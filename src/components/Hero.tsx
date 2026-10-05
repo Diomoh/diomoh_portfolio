@@ -1,6 +1,8 @@
 import type { Content } from "@/content/fr";
 import type { Locale } from "@/i18n/config";
+import Image from "next/image";
 import cutout from "../../public/images/mohamed-cutout.webp";
+import bg from "../../public/footer.png";
 import WorksList from "./WorksList";
 import HeroPhoto from "./HeroPhoto";
 import HeroCarousel from "./HeroCarousel";
@@ -13,16 +15,14 @@ export default function Hero({ lang, langLabel, hero, projectCount }: Props) {
   return (
     <section id="top" className="px-[5%] py-2 sm:py-4">
       <div className="relative flex flex-col overflow-hidden rounded-[28px] bg-ink text-white lg:block lg:h-[calc(100svh-32px)] lg:min-h-[720px]">
+        <Image src={bg} alt="" aria-hidden fill preload sizes="100vw" placeholder="blur" className="object-cover" />
         {/* Zone photo : fond studio clair qui se fond dans le noir */}
         <div className="relative h-[68svh] min-h-[480px] lg:absolute lg:inset-y-0 lg:left-0 lg:h-auto lg:w-[58%]">
-          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_42%_38%,#e2e2df_0%,#bcbcb8_38%,#5d5d5b_68%,#0d0d0e_92%)] lg:bg-[radial-gradient(ellipse_at_40%_42%,#e4e4e1_0%,#c2c2be_34%,#6a6a67_62%,#0d0d0e_88%)]" />
           <HeroPhoto
             src={cutout}
             alt={`${hero.firstName} ${hero.lastName}`}
-            className="absolute bottom-0 left-1/2 h-[92%] w-auto max-w-none -translate-x-1/2 object-contain object-bottom lg:left-[44%]"
+            className="absolute bottom-0 left-1/2 h-[92%] w-auto max-w-none -translate-x-1/2 object-contain object-bottom [mask-image:linear-gradient(to_bottom,#000_70%,transparent)] lg:left-[44%] lg:[mask-image:none]"
           />
-          <div className="pointer-events-none absolute inset-x-0 bottom-0 h-[45%] bg-gradient-to-t from-ink via-ink/70 to-transparent" />
-          <div className="pointer-events-none absolute inset-y-0 right-0 hidden w-1/3 bg-gradient-to-l from-ink to-transparent lg:block" />
 
           {/* Onglet « À propos » + sélecteur de langue, découpé dans le coin */}
           <div className="absolute top-0 left-0 z-30 flex items-center gap-3 rounded-br-[28px] bg-paper px-5 pt-4 pb-4 text-ink sm:px-6">
@@ -41,31 +41,31 @@ export default function Hero({ lang, langLabel, hero, projectCount }: Props) {
         </div>
 
         {/* Nom en très grande typographie */}
-        <h1 className="pointer-events-none absolute tracking-[-0.045em] top-[calc(68svh-130px)] left-1/2 z-10 -translate-x-1/2 text-center whitespace-nowrap font-display leading-[0.82] sm:top-[calc(68svh-180px)] lg:top-auto lg:bottom-[7%] lg:left-[25.5%]">
+        <h1 className="pointer-events-none absolute tracking-[-0.045em] top-[calc(68svh-110px)] left-1/2 z-10 -translate-x-1/2 text-center whitespace-nowrap font-display leading-[0.82] sm:top-[calc(68svh-150px)] lg:top-auto lg:bottom-[7%] lg:left-[25.5%]">
           <span
-            className="fade-up absolute -top-[0.75em] left-[0.4em] z-10 -rotate-6 rounded-md bg-primary px-[0.45em] py-[0.12em] text-[clamp(14px,1.6vw,24px)] leading-tight font-normal tracking-[-0.02em] text-white"
+            className="fade-up absolute -top-[0.75em] left-[0.4em] z-10 -rotate-6 rounded-md bg-primary px-[0.45em] py-[0.12em] text-[clamp(12px,1.2vw,18px)] leading-tight font-normal tracking-[-0.02em] text-white"
             style={{ animationDelay: "900ms" }}
           >
             {hero.greeting}
           </span>
-          <span className="block overflow-hidden pb-1">
-            <span className="rise text-[clamp(45px,8.4vw,132px)] font-normal" style={{ animationDelay: "250ms" }}>
+          <span className="-mt-[0.15em] block overflow-hidden pt-[0.15em] pb-1 text-[clamp(36px,6.3vw,100px)]">
+            <span className="rise font-normal" style={{ animationDelay: "250ms" }}>
               {hero.firstName}
             </span>
           </span>
           <span className="block overflow-hidden pb-3">
-            <span className="rise text-[clamp(45px,8.4vw,132px)] font-extrabold" style={{ animationDelay: "380ms" }}>
+            <span className="rise text-[clamp(36px,6.3vw,100px)] font-extrabold" style={{ animationDelay: "380ms" }}>
               {hero.lastName}
             </span>
           </span>
-          <span className="fade-up mt-1 flex items-center justify-center gap-3 font-sans text-xs font-semibold tracking-[0.35em] text-white/80 uppercase sm:text-sm" style={{ animationDelay: "700ms" }}>
+          <span className="fade-up mt-1 flex items-center justify-center gap-3 font-sans text-[10px] font-semibold tracking-[0.35em] text-white/80 uppercase sm:text-xs" style={{ animationDelay: "700ms" }}>
             {hero.title}
           </span>
           <span className="sr-only"> · {hero.role}</span>
         </h1>
 
         {/* Carrousel : bienvenue puis projets (en haut à droite) */}
-        <div data-guide="hero" className="fade-up relative z-10 px-5 pt-6 pb-8 sm:px-8 lg:absolute lg:top-8 lg:right-8 lg:w-[42%] lg:p-0 xl:w-[38%]" style={{ animationDelay: "500ms" }}>
+        <div className="fade-up relative z-10 px-5 pt-6 pb-8 sm:px-8 lg:absolute lg:top-8 lg:right-8 lg:w-[42%] lg:p-0 xl:w-[38%]" style={{ animationDelay: "500ms" }}>
           <HeroCarousel
             welcome={hero.welcome}
             projects={

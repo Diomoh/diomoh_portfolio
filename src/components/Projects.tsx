@@ -94,8 +94,7 @@ export default function Projects({ projects }: { projects: Content["projects"] }
       {/* En-tête */}
       <div className="grid items-end gap-8 lg:grid-cols-[1.35fr_1fr] lg:gap-16">
         <div data-reveal>
-          <p className="text-xs font-semibold tracking-[0.22em] text-primary uppercase">{projects.eyebrow}</p>
-          <h2 data-split data-guide="projects" className="mt-4 font-display text-[clamp(36px,4.6vw,64px)] leading-[1.05] font-normal tracking-[-0.04em]">
+          <h2 data-split data-guide="projects" className="font-display text-[clamp(36px,4.6vw,64px)] leading-[1.05] font-normal tracking-[-0.04em]">
             {splitWords(
               <>
                 {projects.title[0]}{" "}

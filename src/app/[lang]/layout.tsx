@@ -27,6 +27,7 @@ export async function generateMetadata({ params }: LayoutProps<"/[lang]">): Prom
     metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000"),
     title: meta.title,
     description: meta.description,
+    icons: { icon: "/favicon.svg" },
     alternates: { languages: { fr: "/fr", en: "/en", "x-default": "/" } },
     openGraph: {
       title: meta.title,
@@ -43,7 +44,8 @@ export default async function RootLayout({ children, params }: LayoutProps<"/[la
   if (!hasLocale(lang)) notFound();
   return (
     <html lang={lang} className={`${body.variable} ${display.variable} ${mono.variable}`}>
-      <body>{children}</body>
+      {/* Certaines extensions (ColorZilla, Grammarly…) ajoutent des attributs au body avant React. */}
+      <body suppressHydrationWarning>{children}</body>
     </html>
   );
 }

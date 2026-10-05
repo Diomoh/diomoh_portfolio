@@ -29,7 +29,7 @@ export default function HeroCarousel({ welcome, projects }: { welcome: Content["
       <div className="grid grid-cols-[minmax(0,1fr)]">
         {/* Bloc 1 : bienvenue */}
         <div className={`${slide(0)} h-full`} aria-hidden={index !== 0}>
-          <div key={index} className="flex h-full flex-col items-start justify-center text-left">
+          <div key={index} className="flex h-full flex-col items-start justify-start text-left lg:justify-center">
             <p className="font-display text-[clamp(30px,3.2vw,50px)] leading-[1.12] font-semibold tracking-[-0.04em]">
               {words.map((w, k) => (
                 <span key={k} className="fade-up inline-block pr-[0.25em]" style={{ animationDelay: `${k * 70}ms` }}>
@@ -54,7 +54,7 @@ export default function HeroCarousel({ welcome, projects }: { welcome: Content["
 
       {/* Boutons communs aux deux blocs */}
       <div className="fade-up mt-7 flex flex-wrap gap-3" style={{ animationDelay: "900ms" }}>
-        <a href="#contact" className="group inline-flex items-center gap-3 rounded-full bg-primary py-1.5 pr-1.5 pl-5 text-sm font-semibold text-white transition hover:bg-white hover:text-ink">
+        <a href="#contact" data-guide="hero" className="group inline-flex items-center gap-3 rounded-full bg-primary py-1.5 pr-1.5 pl-5 text-sm font-semibold text-white transition hover:bg-white hover:text-ink">
           {welcome.ctaPrimary}
           <span className="grid size-9 place-items-center rounded-full bg-white text-primary transition group-hover:bg-primary group-hover:text-white">
             <ArrowRight className="size-4" />

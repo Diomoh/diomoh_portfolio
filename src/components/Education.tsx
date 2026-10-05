@@ -7,7 +7,7 @@ export default function Education({ education }: { education: Content["education
   return (
     <section id="education" className="py-24 lg:py-36">
       <div className="shell">
-      <SectionHeader guide="education" eyebrow={education.eyebrow} title={education.title} />
+      <SectionHeader guide="education" title={education.title} />
       <div className="mt-14 grid gap-6 lg:grid-cols-[1fr_1.4fr]">
         <div data-reveal className="relative overflow-hidden rounded-[28px] bg-primary p-8 text-white">
           <div aria-hidden className="absolute -right-16 -bottom-16 size-64 rounded-full border-[28px] border-white/10" />

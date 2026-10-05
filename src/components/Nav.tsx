@@ -31,8 +31,9 @@ export default function Nav({ lang, nav }: { lang: Locale; nav: Content["nav"] }
       }`}
     >
       <nav className="flex w-full max-w-5xl items-center justify-between gap-2 rounded-full border border-white/10 bg-ink/80 py-2 pr-2 pl-5 text-white shadow-2xl shadow-black/20 backdrop-blur-xl">
-        <a href="#top" className="font-display text-lg font-bold italic">
-          MD<span className="text-primary">.</span>
+        <a href="#top" aria-label="diomoh" className="shrink-0">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src="/diomoh-logo-negatif.png" alt="diomoh" width={2000} height={474} className="h-6 w-auto" />
         </a>
         <ul className="hidden items-center gap-1 text-sm text-white/70 md:flex">
           {links.map(([href, label]) => (

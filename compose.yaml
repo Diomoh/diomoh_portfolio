@@ -5,6 +5,7 @@ services:
     build: .
     container_name: diomoh
     restart: unless-stopped
+    env_file: .env  # SMTP Brevo (voir .env.example)
     networks: [web]
 
 networks:

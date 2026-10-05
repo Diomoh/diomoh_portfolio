@@ -47,7 +47,6 @@ export default function About({ about }: { about: Content["about"] }) {
             <span className="text-primary">{String(active + 1).padStart(2, "0")}</span>
             <span className="text-ink/30"> / {String(steps.length).padStart(2, "0")}</span>
           </div>
-          <div className="text-xs font-semibold tracking-[0.22em] text-ink/50 uppercase">{about.eyebrow}</div>
         </div>
 
         {/* Piste horizontale */}

@@ -45,3 +45,4 @@ next-env.d.ts
 /public/images/*.png
 /public/images/mon_image/*.png
 /public/images/mon_image/*.jpeg
+!.env.example

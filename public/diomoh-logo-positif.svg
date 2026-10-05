@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="236 204 1512 358" width="1512" height="358" role="img" aria-label="diomoh"><g fill="none" stroke="#18212A" stroke-width="32">
+<circle cx="362" cy="438" r="104"/>
+<path d="M470 208 V553"/>
+<path d="M548 320 V553"/>
+<circle cx="722" cy="438" r="106"/>
+<path d="M891 553 V406 A70.5 70.5 0 0 1 1032 406 V553 M1032 406 A71.5 71.5 0 0 1 1175 406 V553"/>
+<circle cx="1345" cy="438" r="106"/>
+<path d="M1517 217 V553 M1517 441 A105 105 0 0 1 1727 441 V553"/>
+</g><g fill="#2563EB">
+<circle cx="549" cy="264" r="27"/>
+<circle cx="1345" cy="436" r="31"/>
+<rect x="1345" y="429" width="91" height="14"/>
+</g></svg>

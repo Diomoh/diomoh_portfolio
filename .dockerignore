@@ -7,3 +7,5 @@ public/images/*.png
 public/images/mon_image/*.png
 public/images/mon_image/*.jpeg
 *.tsbuildinfo
+.env*
+!.env.example
